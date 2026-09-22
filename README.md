@@ -2,24 +2,49 @@
 
 > sudo for AI agents.
 
-**agent-sudo** is an open-source permission and safety layer for AI coding agents. It intercepts sensitive actions, applies deterministic policies, optionally asks a semantic decision engine, and records an auditable decision trail.
+**agent-sudo** is an open-source permission and safety layer for AI coding agents. It is being designed as a local-first developer tool with a polished terminal/web experience, explicit policies, human approval, and explainable decisions.
 
-## Why
+> **Naming note:** the repository name is provisional while we validate ecosystem/package-name collisions before the first implementation release.
 
-AI coding agents can read files, execute commands, access environment variables, install packages, and make network requests. Humans need a simple way to define what an agent may do automatically, what requires approval, and what must never happen.
+## Vision
 
-## Goals
+AI coding agents increasingly operate with access to files, shells, network resources, package managers, git, and MCP tools. Developers need a clear boundary between:
 
-- One simple command to wrap an agent
-- Explicit permissions for filesystem, shell, network, secrets, and package operations
+- actions that happen automatically
+- actions that need approval
+- actions that must never happen
+
+agent-sudo aims to make that boundary visible, configurable, and testable.
+
+## Experience
+
+The project will have two complementary interfaces:
+
+- **CLI/TUI:** fast, keyboard-first, suitable for SSH and remote development
+- **Local web UI:** live agent activity, pending approvals, policy state, decision history, and explanations
+
+The visual language will be **retro-futuristic terminal / CRT inspired**, while keeping accessibility, readability, and information density appropriate for a serious developer tool.
+
+## Design goals
+
+- One-command startup
 - Safe defaults
-- Human approval for ambiguous actions
-- Deterministic policy enforcement
-- Optional semantic decisions with Jev
-- Local-first operation and auditable logs
-- Support for multiple coding agents
+- Explicit least-privilege policies
+- Human approval for ambiguous or consequential actions
+- Deterministic enforcement for hard rules
+- Optional semantic judgement with Jev
+- Local-first telemetry
+- Explainable decision records
+- Replayable tests and benchmark scenarios
+- Clear integration paths for coding agents and MCP
 
 ## Planned usage
+
+```bash
+agent-sudo <agent-command>
+```
+
+Examples:
 
 ```bash
 agent-sudo claude
@@ -51,19 +76,28 @@ secrets:
   env_files: deny
 ```
 
+## Documentation
+
+- [Architecture](docs/ARCHITECTURE.md)
+- [Threat model](docs/THREAT_MODEL.md)
+- [UI design](docs/UI_DESIGN.md)
+- [Testing strategy](docs/TESTING_STRATEGY.md)
+- [Roadmap](docs/ROADMAP.md)
+
 ## Status
 
-🚧 Early project. The repository is currently being designed before implementation.
+🚧 Early design / pre-implementation.
 
-The first milestone is a local CLI that can safely wrap a child process and record proposed/observed actions without changing the user's normal workflow.
+The initial milestone is a local wrapper and policy engine that can observe and classify actions without silently weakening the operating system's security model.
 
-## Design principles
+## Security principles
 
 1. **Fail closed for high-risk actions.**
-2. **Never weaken OS-level security boundaries.**
-3. **Make every decision explainable.**
-4. **Keep sensitive telemetry local by default.**
-5. **Jev is optional, not a hard dependency.**
+2. **Never treat an agent's own judgement as an authorization boundary.**
+3. **Never weaken OS-level security boundaries.**
+4. **Redact secrets before persistent logging.**
+5. **Keep sensitive telemetry local by default.**
+6. **Jev is optional and cannot override a hard deny.**
 
 ## License
 
